@@ -1,3 +1,3 @@
-# nikitendo.github.io-
+# Markdown & Latex viewer with Telegram Fast Preview for Nikitendo's bots
 
-https://nikitendo.github.io/nikitendo.github.io-/
+https://yoratt.github.io/MLVwTFPfNB/
