@@ -1,75 +1,49 @@
 <!doctype html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Просмотр сообщения</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-<meta property="tg:site_verification" content="g7j8/rPFXfhyrq5q0QQV7EsYWv4=">
-</head>
-<body>
-<div id="app" style="max-width:720px;margin:40px auto;padding:0 16px;font:16px/1.6 system-ui;">Загружаю…</div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/markdown-it@14/dist/markdown-it.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
-<script>
-// ——— Base64url кодек (ничего не меняет в слэшах) ———
-function toBase64Url(str){
-  const bytes = new TextEncoder().encode(str);
-  let bin = ''; for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-  return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-}
-function fromBase64Url(b64url){
-  if (!b64url) return '';
-  const b64 = b64url.replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(b64url.length/4)*4,'=');
-  const bin = atob(b64), bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return new TextDecoder().decode(bytes);
-}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<title>Просмотр сообщения</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/lz-string/libs/lz-string.min.js"></script>
+		<meta property="tg:site_verification" content="g7j8/rPFXfhyrq5q0QQV7EsYWv4=">
+		<meta property="telegram:channel" content="@gamesinprism_chat">
+		<meta property="tg:site_verification" content="g7j8/rPFXfhyrq5q0QQV7EsYWv4=">
+		<meta property="article:published_time" content="">
+		<style>
+		#app {
+			max-width: 720px;
+			margin: 40px auto;
+			padding: 0 16px;
+			font: 16px/1.6 system-ui;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div class="article">
+				<article class="article__content">
+				</article>
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/markdown-it@14/dist/markdown-it.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+		<script>
+		function render() {
+			const params = new URLSearchParams(window.location.search);
+			const payload = params.get('t');
 
-// ——— Читаем payload из фрагмента #t=... ———
-const params = new URLSearchParams(location.hash.slice(1));
-const payload = params.get('t');
+			if (!payload)
+				return;
 
-// ——— Если payload нет — показываем демо-текст через String.raw (одинарные \ работают) ———
-const fallback = String.raw`
-[Активация электротехнического протокола. Анализ соотношения электрических и механических углов.]
+			const md = window.markdownit({ html:false, linkify:true, typographer:true })
+			  .use(texmath, { engine:katex, delimiters:'dollars', katexOptions:{ throwOnError:false }});
 
-Это вопрос масштабирования. Соотношение между электрическими углами ($\alpha_e$) и механическими (геометрическими) углами ($\alpha_m$) напрямую зависит от числа пар полюсов ($p$) по формуле:
-
-$$\alpha_e = p * \alpha_m$$
-
-Где $p$ — число пар полюсов.
-
-***
-
-### 1. Случай $p = 1$ (как вы указали)
-
-Если $p = 1$, то:
-$$\alpha_e = 1 * \alpha_m$$
-90 электрических градусов = 90 механических (геометрических) градусов. Это базовое соотношение.
-
-### 2. Случай $p = 3$
-
-Если число пар полюсов равно 3 ($p = 3$), то зависимость становится:
-$$\alpha_e = 3 * \alpha_m$$
-
-Следовательно, чтобы найти, скольким геометрическим градусам соответствуют 90 электрических градусов, нужно преобразовать формулу:
-
-$$\alpha_m = \alpha_e / p$$
-$$\alpha_m = 90 \text{ град} / 3$$
-$$\alpha_m = 30 \text{ град}$$
-
-**Ответ:**
-
-Если число пар полюсов равно 3, то **90 электрических градусов соответствует 30 геометрическим (механическим) градусам**.
-
-Это означает, что для полного электрического цикла (360 электрических градусов) ротору достаточно повернуться всего на 120 механических градусов ($360 / 3 = 120$). Машина с большим числом полюсов совершает больше электрических циклов за один физический оборот.`;
-
-// ——— Рендер ———
-const md = window.markdownit({ html:false, linkify:true, typographer:true })
-  .use(texmath, { engine:katex, delimiters:'dollars', katexOptions:{ throwOnError:false }});
-
-const mdText = payload ? fromBase64Url(payload) : fallback;
-document.querySelector('#app').innerHTML = md.render(mdText);
-</script>
+			const mdText = LZString.decompressFromEncodedURIComponent(payload);
+			document.querySelector('.article__content').innerHTML = md.render(mdText);
+		}
+		render();
+		</script>
+	</body>
+</html>
