@@ -1,3 +1,3 @@
-# Markdown & Latex for Nikitendo's bots
+# Markdown & Latex Viewer for Nikitendo's bots
 
 https://yoratt.github.io/MLVfNB/
