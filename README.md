@@ -1,3 +1,8 @@
+> [!NOTE]
+> Данный сайт больше не актуален, так как в Telegram добавили [расширенное форматирование](https://telegram.org/blog/watch-apps-and-more/ru#do-neprilichiya-rasshirennoe-formatirovanie-teksta-dlya-botov) для ботов.
+
+---
+
 ### Markdown & Latex Viewer for Nikitendo's bots
 # Сократитель сообщений с форматированием
 
